@@ -22,8 +22,6 @@ const CartView = () => {
   useEffect(() => {
     dispatch(fetchCartData());
     dispatch(fetchWishlistData());
-
-    dispatch(setTotalCartPrice(totalCartPrice));
   }, []);
 
   const clickHandlerForCartBtn = (id) => {

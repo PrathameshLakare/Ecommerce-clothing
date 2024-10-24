@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { postAddress, updateAddress } from "./addressSlice";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const PostAddress = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
   const [houseNumber, setHouseNumber] = useState("");
   const [streetName, setStreetName] = useState("");
@@ -26,9 +27,10 @@ const PostAddress = () => {
       setCountry(existingAddress.country);
       setPostalCode(existingAddress.postalCode);
     }
-  }, []);
+  }, [existingAddress]);
 
-  const clickHandlerForAddress = () => {
+  const clickHandlerForAddress = (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
     if (existingAddress) {
       dispatch(
         updateAddress({
@@ -56,6 +58,7 @@ const PostAddress = () => {
       };
       dispatch(postAddress(newAddress));
     }
+    navigate("/address");
   };
 
   return (
@@ -63,103 +66,101 @@ const PostAddress = () => {
       <h3 className="text-center">Address</h3>
 
       <div className="col-md-4">
-        <label className="form-label" htmlFor="houseNumber">
-          House Number:
-        </label>
-        <input
-          className="form-control"
-          id="houseNumber"
-          type="text"
-          value={houseNumber}
-          onChange={(e) => setHouseNumber(e.target.value)}
-          required
-        />
-        <br />
+        <form onSubmit={clickHandlerForAddress}>
+          <label className="form-label" htmlFor="houseNumber">
+            House Number:
+          </label>
+          <input
+            className="form-control"
+            id="houseNumber"
+            type="text"
+            value={houseNumber}
+            onChange={(e) => setHouseNumber(e.target.value)}
+            required
+          />
+          <br />
 
-        <label className="form-label" htmlFor="streetName">
-          Street Name:
-        </label>
-        <input
-          className="form-control"
-          id="streetName"
-          type="text"
-          value={streetName}
-          onChange={(e) => setStreetName(e.target.value)}
-          required
-        />
-        <br />
+          <label className="form-label" htmlFor="streetName">
+            Street Name:
+          </label>
+          <input
+            className="form-control"
+            id="streetName"
+            type="text"
+            value={streetName}
+            onChange={(e) => setStreetName(e.target.value)}
+            required
+          />
+          <br />
 
-        <label className="form-label" htmlFor="landmark">
-          Landmark:
-        </label>
-        <input
-          className="form-control"
-          id="landmark"
-          type="text"
-          value={landmark}
-          onChange={(e) => setLandmark(e.target.value)}
-          required
-        />
-        <br />
+          <label className="form-label" htmlFor="landmark">
+            Landmark:
+          </label>
+          <input
+            className="form-control"
+            id="landmark"
+            type="text"
+            value={landmark}
+            onChange={(e) => setLandmark(e.target.value)}
+            required
+          />
+          <br />
 
-        <label className="form-label" htmlFor="city">
-          City:
-        </label>
-        <input
-          className="form-control"
-          id="city"
-          type="text"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          required
-        />
-        <br />
+          <label className="form-label" htmlFor="city">
+            City:
+          </label>
+          <input
+            className="form-control"
+            id="city"
+            type="text"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            required
+          />
+          <br />
 
-        <label className="form-label" htmlFor="postalCode">
-          Postal Code / Pin Code:
-        </label>
-        <input
-          className="form-control"
-          id="postalCode"
-          type="text"
-          value={postalCode}
-          onChange={(e) => setPostalCode(e.target.value)}
-          required
-        />
-        <br />
+          <label className="form-label" htmlFor="postalCode">
+            Postal Code / Pin Code:
+          </label>
+          <input
+            className="form-control"
+            id="postalCode"
+            type="text"
+            value={postalCode}
+            onChange={(e) => setPostalCode(e.target.value)}
+            required
+          />
+          <br />
 
-        <label className="form-label" htmlFor="state">
-          State:
-        </label>
-        <input
-          className="form-control"
-          id="state"
-          type="text"
-          value={state}
-          onChange={(e) => setState(e.target.value)}
-          required
-        />
-        <br />
+          <label className="form-label" htmlFor="state">
+            State:
+          </label>
+          <input
+            className="form-control"
+            id="state"
+            type="text"
+            value={state}
+            onChange={(e) => setState(e.target.value)}
+            required
+          />
+          <br />
 
-        <label className="form-label" htmlFor="country">
-          Country:
-        </label>
-        <input
-          className="form-control"
-          id="country"
-          type="text"
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-          required
-        />
-        <br />
-        <Link
-          to={"/address"}
-          onClick={clickHandlerForAddress}
-          className="btn btn-success mb-2"
-        >
-          {existingAddress ? "Update Address" : "Save Address"}
-        </Link>
+          <label className="form-label" htmlFor="country">
+            Country:
+          </label>
+          <input
+            className="form-control"
+            id="country"
+            type="text"
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+            required
+          />
+          <br />
+          <button type="submit" className="btn btn-success mb-2">
+            {existingAddress ? "Update Address" : "Save Address"}
+          </button>
+        </form>
       </div>
     </div>
   );

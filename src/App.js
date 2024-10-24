@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import CategoriesView from "./features/categories/CategoriesView";
 import { BsCart, BsHeart } from "react-icons/bs";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import ClothingView from "./features/clothing/ClothingView";
 import ProductDetails from "./pages/ProductDetails";
@@ -9,13 +9,21 @@ import WishlistView from "./features/wishllist/WishlistView";
 import CartView from "./features/cart/CartView";
 import AddressView from "./features/address/AddressView";
 import PostAddress from "./features/address/PostAddress";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OrderSummary from "./pages/OrderSummary";
+import { fetchCartData } from "./features/cart/cartSlice";
+import { fetchWishlistData } from "./features/wishllist/wishlistSlice";
 
 export default function App() {
+  const dispatch = useDispatch();
   const { cartValue } = useSelector((state) => state.cart);
   const { wishlistValue } = useSelector((state) => state.wishlist);
   const [searchValue, setSearchValue] = useState("");
+
+  useEffect(() => {
+    dispatch(fetchCartData());
+    dispatch(fetchWishlistData());
+  }, []);
 
   return (
     <Router>

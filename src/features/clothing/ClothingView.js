@@ -231,7 +231,7 @@ const ClothingView = ({ searchValue }) => {
               <div>
                 <p>
                   <strong className="fs-3">Showing All Products</strong>{" "}
-                  (Showing {sortedProducts.lengt} products)
+                  (Showing {sortedProducts.length} products)
                 </p>
                 {status === "loading" && (
                   <p className="text-center">Loading...</p>

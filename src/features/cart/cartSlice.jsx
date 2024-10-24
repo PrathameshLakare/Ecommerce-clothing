@@ -47,7 +47,7 @@ export const deleteCartItem = createAsyncThunk(
     const response = await axios.delete(
       `https://major-project-backend-e-comerce-h8l3xa8bw.vercel.app/api/cart/${id}`
     );
-    return id;
+    return response.data;
   }
 );
 
@@ -87,9 +87,15 @@ const cartSlice = createSlice({
       state.status = "error";
       state.error = action.error.message;
     });
+    builder.addCase(deleteCartItem.rejected, (state) => {
+      state.status = "rejected";
+    });
+    builder.addCase(deleteCartItem.pending, (state) => {
+      state.status = "loading";
+    });
     builder.addCase(deleteCartItem.fulfilled, (state, action) => {
       state.cart = state.cart.filter(
-        (item) => item.productId !== action.payload
+        (item) => item.productId !== action.payload.product.productId
       );
       state.cartValue = state.cart.length;
     });

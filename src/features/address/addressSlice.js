@@ -22,7 +22,7 @@ export const postAddress = createAsyncThunk(
 export const updateAddress = createAsyncThunk(
   "address/updateAddress",
   async ({ id, updatedAddress }) => {
-    const response = await axios.put(
+    const response = await axios.post(
       `https://major-project-backend-e-comerce-h8l3xa8bw.vercel.app/api/user/address/${id}`,
       updatedAddress
     );
@@ -36,7 +36,8 @@ export const deleteAddress = createAsyncThunk(
     const response = await axios.delete(
       `https://major-project-backend-e-comerce-h8l3xa8bw.vercel.app/api/user/address/${id}`
     );
-    return id;
+
+    return response.data;
   }
 );
 
@@ -60,18 +61,20 @@ const addressSlice = createSlice({
       state.status = "error";
       state.error = action.error.message;
     });
+
     builder.addCase(postAddress.fulfilled, (state, action) => {
       state.status = "success";
-      state.address = action.payload;
+      state.address.push(action.payload.product);
     });
     builder.addCase(postAddress.rejected, (state, action) => {
       state.status = "error";
       state.error = action.error.message;
     });
-    builder.addCase(deleteAddress.fulfilled, (state, action) => {
-      state.address = state.address.filter((add) => add._id !== action.payload);
-    });
 
+    builder.addCase(deleteAddress.fulfilled, (state, action) => {
+      const id = action.payload.address._id;
+      state.address = state.address.filter((add) => add._id !== id);
+    });
     builder.addCase(deleteAddress.rejected, (state, action) => {
       state.status = "error";
       state.error = action.error.message;

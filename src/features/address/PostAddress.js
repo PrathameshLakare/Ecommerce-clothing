@@ -76,6 +76,7 @@ const PostAddress = () => {
             type="text"
             value={houseNumber}
             onChange={(e) => setHouseNumber(e.target.value)}
+            placeholder="Enter your house number"
             required
           />
           <br />
@@ -89,6 +90,7 @@ const PostAddress = () => {
             type="text"
             value={streetName}
             onChange={(e) => setStreetName(e.target.value)}
+            placeholder="Enter your street name"
             required
           />
           <br />
@@ -102,6 +104,7 @@ const PostAddress = () => {
             type="text"
             value={landmark}
             onChange={(e) => setLandmark(e.target.value)}
+            placeholder="Enter nearby landmark"
             required
           />
           <br />
@@ -115,6 +118,7 @@ const PostAddress = () => {
             type="text"
             value={city}
             onChange={(e) => setCity(e.target.value)}
+            placeholder="Enter your city"
             required
           />
           <br />
@@ -128,6 +132,7 @@ const PostAddress = () => {
             type="text"
             value={postalCode}
             onChange={(e) => setPostalCode(e.target.value)}
+            placeholder="Enter postal or pin code"
             required
           />
           <br />
@@ -141,6 +146,7 @@ const PostAddress = () => {
             type="text"
             value={state}
             onChange={(e) => setState(e.target.value)}
+            placeholder="Enter your state"
             required
           />
           <br />
@@ -154,6 +160,7 @@ const PostAddress = () => {
             type="text"
             value={country}
             onChange={(e) => setCountry(e.target.value)}
+            placeholder="Enter your country"
             required
           />
           <br />

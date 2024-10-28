@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export const fetchClothings = createAsyncThunk(
   "products/clothing",
   async () => {
-    const response = await axios.get(
-      "https://major-project-backend-e-comerce-h8l3xa8bw.vercel.app/api/products"
-    );
+    const response = await axios.get(`${API_URL}/api/products`);
     return response.data;
   }
 );

@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export const fetchAddress = createAsyncThunk("address", async () => {
-  const response = await axios.get(
-    "https://major-project-backend-e-comerce-h8l3xa8bw.vercel.app/api/user/address"
-  );
+  const response = await axios.get(`${API_URL}/api/user/address`);
   return response.data;
 });
 
@@ -12,7 +12,7 @@ export const postAddress = createAsyncThunk(
   "address/postAddress",
   async (addressData) => {
     const response = await axios.post(
-      "https://major-project-backend-e-comerce-h8l3xa8bw.vercel.app/api/user/address",
+      `${API_URL}/api/user/address`,
       addressData
     );
     return response.data;
@@ -23,7 +23,7 @@ export const updateAddress = createAsyncThunk(
   "address/updateAddress",
   async ({ id, updatedAddress }) => {
     const response = await axios.post(
-      `https://major-project-backend-e-comerce-h8l3xa8bw.vercel.app/api/user/address/${id}`,
+      `${API_URL}/api/user/address/${id}`,
       updatedAddress
     );
     return response.data;
@@ -33,9 +33,7 @@ export const updateAddress = createAsyncThunk(
 export const deleteAddress = createAsyncThunk(
   "address/deleteAddress",
   async (id) => {
-    const response = await axios.delete(
-      `https://major-project-backend-e-comerce-h8l3xa8bw.vercel.app/api/user/address/${id}`
-    );
+    const response = await axios.delete(`${API_URL}/api/user/address/${id}`);
 
     return response.data;
   }

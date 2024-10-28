@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export const fetchWishlistData = createAsyncThunk(
   "wishlist/fetchWishlist",
   async () => {
-    const response = await axios.get(
-      "https://major-project-backend-e-comerce-h8l3xa8bw.vercel.app/api/wishlist"
-    );
+    const response = await axios.get(`${API_URL}/api/wishlist`);
     return response.data;
   }
 );
@@ -14,15 +14,9 @@ export const fetchWishlistData = createAsyncThunk(
 export const postWishlistData = createAsyncThunk(
   "wishlist/postWishlist",
   async (wishlistData) => {
-    await axios.post(
-      "https://major-project-backend-e-comerce-h8l3xa8bw.vercel.app/api/wishlist",
-      wishlistData
-    );
+    await axios.post(`${API_URL}/api/wishlist`, wishlistData);
 
-    const response = await axios.get(
-      "https://major-project-backend-e-comerce-h8l3xa8bw.vercel.app/api/wishlist",
-      wishlistData
-    );
+    const response = await axios.get(`${API_URL}/api/wishlist`, wishlistData);
     return response.data;
   }
 );
@@ -30,9 +24,7 @@ export const postWishlistData = createAsyncThunk(
 export const deleteWishlistItem = createAsyncThunk(
   "wishlist/deleteWishlist",
   async (id) => {
-    const response = await axios.delete(
-      `https://major-project-backend-e-comerce-h8l3xa8bw.vercel.app/api/wishlist/${id}`
-    );
+    const response = await axios.delete(`${API_URL}/api/wishlist/${id}`);
     return id;
   }
 );

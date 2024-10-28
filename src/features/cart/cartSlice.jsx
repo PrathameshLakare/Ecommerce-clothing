@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export const fetchCartData = createAsyncThunk(
   "cart/fetchCartItems",
   async () => {
-    const response = await axios.get(
-      "https://major-project-backend-e-comerce-h8l3xa8bw.vercel.app/api/cart"
-    );
+    const response = await axios.get(`${API_URL}/api/cart`);
     return response.data;
   }
 );
@@ -14,14 +14,9 @@ export const fetchCartData = createAsyncThunk(
 export const postCartData = createAsyncThunk(
   "cart/postCartItems",
   async (cartData) => {
-    await axios.post(
-      "https://major-project-backend-e-comerce-h8l3xa8bw.vercel.app/api/cart",
-      cartData
-    );
+    await axios.post(`${API_URL}/api/cart`, cartData);
 
-    const response = await axios.get(
-      "https://major-project-backend-e-comerce-h8l3xa8bw.vercel.app/api/cart"
-    );
+    const response = await axios.get(`${API_URL}/api/cart`);
     return response.data;
   }
 );
@@ -29,14 +24,9 @@ export const postCartData = createAsyncThunk(
 export const updateCartData = createAsyncThunk(
   "cart/updateCartDetails",
   async ({ id, updatedData }) => {
-    await axios.put(
-      `https://major-project-backend-e-comerce-h8l3xa8bw.vercel.app/api/updateCart/${id}`,
-      updatedData
-    );
+    await axios.put(`${API_URL}/api/updateCart/${id}`, updatedData);
 
-    const response = await axios.get(
-      "https://major-project-backend-e-comerce-h8l3xa8bw.vercel.app/api/cart"
-    );
+    const response = await axios.get(`${API_URL}/api/cart`);
     return response.data;
   }
 );
@@ -44,9 +34,7 @@ export const updateCartData = createAsyncThunk(
 export const deleteCartItem = createAsyncThunk(
   "cart/deleteCartItem",
   async (id) => {
-    const response = await axios.delete(
-      `https://major-project-backend-e-comerce-h8l3xa8bw.vercel.app/api/cart/${id}`
-    );
+    const response = await axios.delete(`${API_URL}/api/cart/${id}`);
     return response.data;
   }
 );

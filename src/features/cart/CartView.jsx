@@ -115,28 +115,30 @@ const CartView = () => {
                     <p>
                       <strong>Price: &#8377;{product.productPrice}</strong>
                     </p>
-                    <p>
-                      Quantity:
-                      <button
-                        className="btn btn-outline-dark rounded-circle m-1 btn-sm text-center"
-                        onClick={() =>
-                          clickHandlerForDecreasingQuantity(product.productId)
-                        }
-                      >
-                        -
-                      </button>
-                      <span className="badge w-25 h-100 text-bg-light border border-dark">
-                        {product.productQuantity}
-                      </span>
-                      <button
-                        className="btn btn-outline-dark rounded-circle m-1 btn-sm text-center"
-                        onClick={() =>
-                          clickHandlerForIncreasingQuantity(product.productId)
-                        }
-                      >
-                        +
-                      </button>
-                    </p>
+                    <div className="row">
+                      <div className="col-lg-4 mt-1">Quantity:</div>
+                      <div className="col-lg-8 mt-1">
+                        <button
+                          className="btn btn-outline-dark rounded-circle m-1 btn-sm text-center"
+                          onClick={() =>
+                            clickHandlerForDecreasingQuantity(product.productId)
+                          }
+                        >
+                          -
+                        </button>
+                        <span className="py-1 px-3 rounded w-25 h-100 text-bg-light border border-dark">
+                          {product.productQuantity}
+                        </span>
+                        <button
+                          className="btn btn-outline-dark rounded-circle m-1 btn-sm text-center"
+                          onClick={() =>
+                            clickHandlerForIncreasingQuantity(product.productId)
+                          }
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
 
                     <button
                       onClick={() => clickHandlerForCartBtn(product.productId)}

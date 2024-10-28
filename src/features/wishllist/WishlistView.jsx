@@ -46,7 +46,7 @@ const WishlistView = () => {
         {wishlist &&
           wishlist.map((product) => (
             <div key={product._id} className="col-md-4">
-              <div className="card">
+              <div className="card my-2">
                 <img
                   src={product.productImg}
                   alt={`${product.productName} Img`}

@@ -13,9 +13,9 @@ const AddressView = () => {
     dispatch(fetchAddress());
   }, []);
 
-  const handlerForDeleteAddress = (id) => {
-    dispatch(deleteAddress(id));
-  };
+  // const handlerForDeleteAddress = (id) => {
+  //   dispatch(deleteAddress(id));
+  // };
 
   return (
     <div className="container py-3">
@@ -56,7 +56,7 @@ const AddressView = () => {
                     Update
                   </Link>
                   <button
-                    onClick={() => handlerForDeleteAddress(add._id)}
+                    onClick={() => dispatch(deleteAddress(add._id))}
                     className="btn btn-danger mx-1"
                   >
                     Delete

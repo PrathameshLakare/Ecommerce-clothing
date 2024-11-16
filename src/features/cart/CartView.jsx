@@ -106,7 +106,7 @@ const CartView = () => {
                   <img
                     src={product.productImg}
                     alt={`${product.productName} Img`}
-                    className="img-fluid w-100 rounded-start h-100"
+                    className="img img-fluid w-100 rounded-start h-100"
                   />
                 </div>
                 <div className="col-7">

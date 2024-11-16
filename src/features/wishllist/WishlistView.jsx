@@ -46,10 +46,11 @@ const WishlistView = () => {
         {wishlist &&
           wishlist.map((product) => (
             <div key={product._id} className="col-md-4">
-              <div className="card my-2">
+              <div className="card m-2">
                 <img
                   src={product.productImg}
                   alt={`${product.productName} Img`}
+                  className="img img-fluid w-100 rounded-top h-100"
                 />
                 <div className="card-body">
                   <p className="fw-semibold">{product.productName}</p>

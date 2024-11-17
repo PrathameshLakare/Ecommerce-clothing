@@ -15,7 +15,6 @@ const ClothingView = ({ searchValue }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [rating, setRating] = useState(1);
 
-  console.log(searchValue);
   useEffect(() => {
     dispatch(fetchClothings());
     dispatch(fetchWishlistData());

@@ -13,10 +13,6 @@ const AddressView = () => {
     dispatch(fetchAddress());
   }, []);
 
-  // const handlerForDeleteAddress = (id) => {
-  //   dispatch(deleteAddress(id));
-  // };
-
   return (
     <div className="container py-3">
       <h2>Choose Address</h2>

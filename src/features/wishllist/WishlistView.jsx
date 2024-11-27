@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { deleteCartItem, postCartData, fetchCartData } from "../cart/cartSlice";
 import { fetchWishlistData } from "./wishlistSlice";
 
@@ -14,9 +13,11 @@ const WishlistView = () => {
     dispatch(fetchWishlistData());
   }, []);
 
-  const handlerForCartBtn = (id) => {
-    const isInCart = cart.map((item) => item.productId).includes(id);
+  const isInCart = (id) => cart.map((item) => item.productId).includes(id);
+  const isInWishlist = (id) =>
+    wishlist.map((item) => item.productId).includes(id);
 
+  const handlerForCartBtn = (id) => {
     if (isInCart) {
       dispatch(deleteCartItem(id));
     } else {
@@ -33,6 +34,25 @@ const WishlistView = () => {
         };
 
         dispatch(postCartData(cartItem));
+      }
+    }
+  };
+
+  const clickHandlerForWishlistBtn = (id) => {
+    if (isInWishlist(id)) {
+      dispatch(deleteWishlistItem(id));
+    } else {
+      const item = cart.find((product) => product.productId === id);
+      if (item) {
+        const cartItem = {
+          productId: item.productId,
+          productName: item.productName,
+          productCategories: item.productCategories,
+          productImg: item.productImg,
+          productPrice: item.productPrice,
+          productRating: item.productRating,
+        };
+        dispatch(postWishlistData(cartItem));
       }
     }
   };
@@ -57,8 +77,8 @@ const WishlistView = () => {
                   <p>
                     <strong>Price: &#8377;{product.productPrice}</strong>
                   </p>
-                  <Link
-                    className="btn btn-secondary"
+                  <button
+                    className="btn btn-primary w-100 my-2"
                     onClick={() => handlerForCartBtn(product.productId)}
                   >
                     {cart
@@ -66,7 +86,17 @@ const WishlistView = () => {
                       .includes(product.productId)
                       ? "Remove from cart"
                       : "Add to Cart"}
-                  </Link>
+                  </button>
+                  <button
+                    onClick={() =>
+                      clickHandlerForWishlistBtn(product.productId)
+                    }
+                    className="btn btn-secondary w-100 my-2"
+                  >
+                    {isInWishlist(product.productId)
+                      ? "Remove from wishlist"
+                      : "Save to Wishlist"}
+                  </button>
                 </div>
               </div>
             </div>

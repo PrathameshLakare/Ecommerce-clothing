@@ -21,8 +21,8 @@ const WishlistView = () => {
   const isInWishlist = (id) =>
     wishlist.map((item) => item.productId).includes(id);
 
-  const handlerForCartBtn = (id) => {
-    if (isInCart) {
+  const clickHandlerForCartBtn = (id) => {
+    if (isInCart(id)) {
       dispatch(deleteCartItem(id));
     } else {
       const item = wishlist.find((product) => product.productId === id);
@@ -36,7 +36,6 @@ const WishlistView = () => {
           productRating: item.productRating,
           productQuantity: 1,
         };
-
         dispatch(postCartData(cartItem));
       }
     }
@@ -83,7 +82,7 @@ const WishlistView = () => {
                   </p>
                   <button
                     className="btn btn-primary w-100 my-2"
-                    onClick={() => handlerForCartBtn(product.productId)}
+                    onClick={() => clickHandlerForCartBtn(product.productId)}
                   >
                     {cart
                       .map((item) => item.productId)

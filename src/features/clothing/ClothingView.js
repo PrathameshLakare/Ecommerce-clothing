@@ -260,9 +260,12 @@ const ClothingView = ({ searchValue }) => {
                                   {product.productName}
                                 </p>
                                 <p>
-                                  <strong>
-                                    Price: &#8377;{product.productPrice}
-                                  </strong>
+                                  <strong>Price: </strong>
+                                  &#8377; {product.productPrice}
+                                </p>
+                                <p>
+                                  <strong>Rating: </strong>
+                                  {product.productRating}
                                 </p>
                                 <button
                                   onClick={() =>

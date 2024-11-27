@@ -4,7 +4,6 @@ import {
   deleteCartItem,
   postCartData,
   updateCartData,
-  setTotalCartPrice,
 } from "./cartSlice";
 import {
   fetchWishlistData,

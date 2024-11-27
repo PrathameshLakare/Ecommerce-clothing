@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCartItem, postCartData, fetchCartData } from "../cart/cartSlice";
-import { fetchWishlistData } from "./wishlistSlice";
+import {
+  fetchWishlistData,
+  deleteWishlistItem,
+  postWishlistData,
+} from "./wishlistSlice";
 
 const WishlistView = () => {
   const dispatch = useDispatch();

@@ -78,47 +78,57 @@ const ProductDetails = () => {
   };
 
   return (
-    <div className="container">
+    <div
+      className="container d-flex align-items-center justify-content-center"
+      style={{ minHeight: "700px" }}
+    >
       {product && (
         <div className="d-flex justify-content-center p-3">
-          <div className="card w-50 m-4">
+          <div className="card rounded vh-50 m-4">
             <div className="row justify-content-center">
-              <div className="">
+              <div className="col-md-6">
                 <img
                   src={product.productImg}
-                  className="img-fluid w-100 object-fit-contain"
+                  className="img-fluid w-100 h-100 object-fit-fill rounded-start"
                 />
               </div>
 
-              <div className="card-body mx-3">
-                <h3 className="fw-semibold">{product.productName}</h3>
-                <p>
-                  <strong>Price: &#8377;{product.productPrice}</strong>
-                </p>
+              <div className="col-md-6">
+                <div className="card-body mx-3">
+                  <h3 className="fw-semibold mt-2 mb-4">
+                    {product.productName}
+                  </h3>
+                  <p className="my-2">
+                    <strong>Price: &#8377;{product.productPrice}</strong>
+                  </p>
 
-                <p>
-                  <strong>Rating: {product.productRating}</strong>
-                </p>
-                <p>
-                  <strong>Details: </strong>
-                  {product.productDetails}
-                </p>
-                <button
-                  onClick={() => clickHandlerForCart(product._id)}
-                  className="btn btn-primary w-100 my-2"
-                >
-                  {cart.map((item) => item.productId).includes(product._id)
-                    ? "Remove from cart"
-                    : "Add to cart"}
-                </button>
-                <button
-                  onClick={() => clickHandlerForWishlist(product._id)}
-                  className="btn btn-secondary w-100 my-2"
-                >
-                  {wishlist.map((item) => item.productId).includes(product._id)
-                    ? "Remove from wishlist"
-                    : "Save to Wishlist"}
-                </button>
+                  <p className="my-2">
+                    <strong>Rating: {product.productRating}</strong>
+                  </p>
+                  <p className="my-2">
+                    <strong>Details: </strong>
+                    {product.productDetails}
+                  </p>
+
+                  <button
+                    onClick={() => clickHandlerForCart(product._id)}
+                    className="btn btn-primary w-100 my-2 "
+                  >
+                    {cart.map((item) => item.productId).includes(product._id)
+                      ? "Remove from cart"
+                      : "Add to cart"}
+                  </button>
+                  <button
+                    onClick={() => clickHandlerForWishlist(product._id)}
+                    className="btn btn-secondary w-100 my-2"
+                  >
+                    {wishlist
+                      .map((item) => item.productId)
+                      .includes(product._id)
+                      ? "Remove from wishlist"
+                      : "Save to Wishlist"}
+                  </button>
+                </div>
               </div>
             </div>
           </div>

@@ -94,7 +94,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<CategoriesView />} />
         <Route
-          path="/productListing/clothing"
+          path="/productListing/:category"
           element={<ClothingView searchValue={searchValue} />}
         />
         <Route

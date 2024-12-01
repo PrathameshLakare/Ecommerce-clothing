@@ -13,8 +13,14 @@ const categoriesSlice = createSlice({
     categories: [],
     status: "idle",
     error: null,
+    selectedCategories: [],
   },
-  reducers: {},
+  reducers: {
+    setSelectedCategories: (state, action) => {
+      state.selectedCategories = action.payload;
+      console.log(action.payload);
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchCategories.pending, (state) => {
       state.status = "loading";
@@ -30,4 +36,5 @@ const categoriesSlice = createSlice({
   },
 });
 
+export const { setSelectedCategories } = categoriesSlice.actions;
 export default categoriesSlice.reducer;

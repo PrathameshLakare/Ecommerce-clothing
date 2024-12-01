@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCartItem, postCartData, fetchCartData } from "../cart/cartSlice";
 import {
@@ -11,6 +11,8 @@ const WishlistView = () => {
   const dispatch = useDispatch();
   const { wishlist, status, error } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     dispatch(fetchCartData());
@@ -24,6 +26,8 @@ const WishlistView = () => {
   const clickHandlerForCartBtn = (id) => {
     if (isInCart(id)) {
       dispatch(deleteCartItem(id));
+      setToastMessage("Item removed from cart!");
+      setShowToast(true);
     } else {
       const item = wishlist.find((product) => product.productId === id);
       if (item) {
@@ -37,6 +41,8 @@ const WishlistView = () => {
           productQuantity: 1,
         };
         dispatch(postCartData(cartItem));
+        setToastMessage("Item added to cart!");
+        setShowToast(true);
       }
     }
   };
@@ -44,6 +50,8 @@ const WishlistView = () => {
   const clickHandlerForWishlistBtn = (id) => {
     if (isInWishlist(id)) {
       dispatch(deleteWishlistItem(id));
+      setToastMessage("Item removed from wishlist!");
+      setShowToast(true);
     } else {
       const item = cart.find((product) => product.productId === id);
       if (item) {
@@ -56,6 +64,8 @@ const WishlistView = () => {
           productRating: item.productRating,
         };
         dispatch(postWishlistData(cartItem));
+        setToastMessage("Item added to wishlist!");
+        setShowToast(true);
       }
     }
   };
@@ -105,6 +115,29 @@ const WishlistView = () => {
             </div>
           ))}
       </div>
+      {showToast && (
+        <div
+          className="toast-container position-fixed bottom-0 end-0 p-3"
+          style={{ zIndex: 5 }}
+        >
+          <div
+            className="toast show"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+          >
+            <div className="toast-body">
+              {toastMessage}
+              <button
+                type="button"
+                className="btn-close float-end"
+                onClick={() => setShowToast(false)}
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

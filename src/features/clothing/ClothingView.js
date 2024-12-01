@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import { fetchClothings, setSortByPrice } from "./clothingSlice";
 import { postCartData, deleteCartItem, fetchCartData } from "../cart/cartSlice";
@@ -9,11 +9,15 @@ import {
   postWishlistData,
   deleteWishlistItem,
 } from "../wishllist/wishlistSlice";
+import { setSelectedCategories } from "../categories/categoriesSlice";
 
 const ClothingView = ({ searchValue }) => {
   const dispatch = useDispatch();
-  const [selectedCategories, setSelectedCategories] = useState([]);
   const [rating, setRating] = useState(1);
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
+
+  const productCategory = useParams().category;
 
   useEffect(() => {
     dispatch(fetchClothings());
@@ -21,22 +25,26 @@ const ClothingView = ({ searchValue }) => {
     dispatch(fetchCartData());
   }, []);
 
-  const { clothing, sortByPrice, status, error } = useSelector((state) => {
-    return state.clothing;
-  });
+  const { clothing, sortByPrice, status, error } = useSelector(
+    (state) => state.clothing
+  );
+  const { selectedCategories } = useSelector((state) => state.categories);
+  const { wishlist } = useSelector((state) => state.wishlist);
+  const { cart } = useSelector((state) => state.cart);
+
+  console.log(selectedCategories);
 
   const data = clothing.filter((item) =>
     item.productName.toLowerCase().includes(searchValue.toLowerCase())
   );
-
-  const { wishlist } = useSelector((state) => state.wishlist);
-  const { cart } = useSelector((state) => state.cart);
 
   const clickHandlerForCart = (id) => {
     const isInCart = cart.map((item) => item.productId).includes(id);
 
     if (isInCart) {
       dispatch(deleteCartItem(id));
+      setToastMessage("Item removed from cart!");
+      setShowToast(true);
     } else {
       const item = clothing.find((product) => product._id === id);
 
@@ -52,6 +60,8 @@ const ClothingView = ({ searchValue }) => {
         };
 
         dispatch(postCartData(cartItem));
+        setToastMessage("Item added to cart!");
+        setShowToast(true);
       }
     }
   };
@@ -61,6 +71,8 @@ const ClothingView = ({ searchValue }) => {
 
     if (isInWishlist) {
       dispatch(deleteWishlistItem(id));
+      setToastMessage("Item removed from wishlist!");
+      setShowToast(true);
     } else {
       const item = clothing.find((product) => product._id === id);
 
@@ -74,6 +86,8 @@ const ClothingView = ({ searchValue }) => {
           productRating: item.productRating,
         };
         dispatch(postWishlistData(wishlistItem));
+        setToastMessage("Item added to wishlist!");
+        setShowToast(true);
       }
     }
   };
@@ -85,17 +99,25 @@ const ClothingView = ({ searchValue }) => {
     const matchesCategory =
       selectedCategories.length === 0 || matchedCategories.includes(true);
 
+    const matchesProductCategory =
+      !productCategory ||
+      product.productCategories
+        .map((category) => category.toLowerCase())
+        .includes(productCategory.toLowerCase());
+
     const matchedRating = product.productRating >= rating;
-    return matchesCategory && matchedRating;
+    return matchesCategory && matchesProductCategory && matchedRating;
   });
 
   const handleSelectedCategory = (e) => {
     const { value, checked } = e.target;
-    setSelectedCategories((prevValue) =>
-      checked
-        ? [...prevValue, value]
-        : prevValue.filter((category) => category !== value)
-    );
+    const currentCategories = selectedCategories;
+
+    const updatedCategories = checked
+      ? [...currentCategories, value]
+      : currentCategories.filter((category) => category !== value);
+
+    dispatch(setSelectedCategories(updatedCategories));
   };
 
   const sortedProducts = filteredData?.sort((a, b) => {
@@ -115,8 +137,7 @@ const ClothingView = ({ searchValue }) => {
   const clearFilters = (e) => {
     e.preventDefault();
     document.getElementById("filtersForm").reset();
-    setSelectedCategories([]);
-
+    dispatch(setSelectedCategories([]));
     setRating(1);
     dispatch(setSortByPrice("none"));
   };
@@ -173,6 +194,15 @@ const ClothingView = ({ searchValue }) => {
                     />{" "}
                     Women Clothing
                   </label>
+                  <br />
+                  <label className="form-label">
+                    <input
+                      type={"checkbox"}
+                      onClick={(e) => handleSelectedCategory(e)}
+                      value="Kids"
+                    />{" "}
+                    Kids Clothing
+                  </label>
                 </div>
 
                 <div>
@@ -197,6 +227,7 @@ const ClothingView = ({ searchValue }) => {
                     />
                   </div>
                 </div>
+
                 <div>
                   <p className="form-label">
                     <strong>Sort By Price</strong>
@@ -303,6 +334,29 @@ const ClothingView = ({ searchValue }) => {
           </div>
         </div>
       </div>
+      {showToast && (
+        <div
+          className="toast-container position-fixed bottom-0 end-0 p-3"
+          style={{ zIndex: 5 }}
+        >
+          <div
+            className="toast show"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+          >
+            <div className="toast-body">
+              {toastMessage}
+              <button
+                type="button"
+                className="btn-close float-end"
+                onClick={() => setShowToast(false)}
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

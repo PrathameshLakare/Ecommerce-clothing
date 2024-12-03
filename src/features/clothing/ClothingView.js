@@ -273,19 +273,19 @@ const ClothingView = ({ searchValue }) => {
                       <div key={product._id} className="col-md-6">
                         <div className="card m-2">
                           <div className="row">
-                            <div className="col-md-5">
+                            <div className="col-md-12 col-sm-12 col-lg-6">
                               <Link
                                 className=""
                                 to={`/productListing/ProductDetails/${product._id}`}
                               >
                                 <img
                                   src={product.productImg}
-                                  className="img-fluid w-100 rounded-start h-100"
+                                  className="img-fluid object-fit-fit w-100 h-100 card-img"
                                 />
                               </Link>
                             </div>
 
-                            <div className="col-md-7">
+                            <div className="col-md-12 col-sm-12 col-lg-6">
                               <div className="px-2 my-2 placeholder-glow">
                                 <p className="fw-semibold">
                                   {product.productName}
@@ -340,16 +340,16 @@ const ClothingView = ({ searchValue }) => {
           style={{ zIndex: 5 }}
         >
           <div
-            className="toast show"
+            className="toast show text-bg-primary text-white"
             role="alert"
             aria-live="assertive"
             aria-atomic="true"
           >
-            <div className="toast-body">
+            <div className="toast-body fs-6">
               {toastMessage}
               <button
                 type="button"
-                className="btn-close float-end"
+                className="btn-close float-end btn-close-white"
                 onClick={() => setShowToast(false)}
                 aria-label="Close"
               ></button>

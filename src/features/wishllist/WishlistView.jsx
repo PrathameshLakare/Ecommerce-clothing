@@ -121,16 +121,16 @@ const WishlistView = () => {
           style={{ zIndex: 5 }}
         >
           <div
-            className="toast show"
+            className="toast show text-bg-primary text-white"
             role="alert"
             aria-live="assertive"
             aria-atomic="true"
           >
-            <div className="toast-body">
+            <div className="toast-body fs-6">
               {toastMessage}
               <button
                 type="button"
-                className="btn-close float-end"
+                className="btn-close float-end btn-close-white"
                 onClick={() => setShowToast(false)}
                 aria-label="Close"
               ></button>

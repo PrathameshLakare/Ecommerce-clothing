@@ -111,6 +111,7 @@ const ProductDetails = () => {
                     <h3 className="fw-semibold mt-2 mb-4">
                       {product.productName}
                     </h3>
+
                     <p className="my-2">
                       <strong>Price: &#8377;{product.productPrice}</strong>
                     </p>
@@ -118,6 +119,12 @@ const ProductDetails = () => {
                     <p className="my-2">
                       <strong>Rating: {product.productRating}</strong>
                     </p>
+
+                    <p className="my-2">
+                      <strong>Categories: </strong>
+                      {product.productCategories.join(", ")}
+                    </p>
+
                     <p className="my-2">
                       <strong>Details: </strong>
                       {product.productDetails}
@@ -148,22 +155,23 @@ const ProductDetails = () => {
           </div>
         )}
       </div>
+
       {showToast && (
         <div
           className="toast-container position-fixed bottom-0 end-0 p-3"
           style={{ zIndex: 5 }}
         >
           <div
-            className="toast show"
+            className="toast show text-bg-primary text-white"
             role="alert"
             aria-live="assertive"
             aria-atomic="true"
           >
-            <div className="toast-body">
+            <div className="toast-body fs-6">
               {toastMessage}
               <button
                 type="button"
-                className="btn-close float-end"
+                className="btn-close float-end btn-close-white"
                 onClick={() => setShowToast(false)}
                 aria-label="Close"
               ></button>

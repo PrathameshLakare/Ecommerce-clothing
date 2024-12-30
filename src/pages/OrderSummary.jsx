@@ -1,14 +1,19 @@
 import { Link } from "react-router-dom";
 import { fetchCartData } from "../features/cart/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const OrderSummary = () => {
   const dispatch = useDispatch();
   const { cart, cartValue } = useSelector((state) => state.cart);
 
+  const [showSuccessMessage, setShowSuccessMessage] = useState(true);
+
   useEffect(() => {
     dispatch(fetchCartData());
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+    }, 5000);
   }, []);
 
   const totalCartPrice = cart.reduce(
@@ -18,29 +23,45 @@ const OrderSummary = () => {
   );
 
   return (
-    <div className="container py-3 bg-body-tertiary ">
-      <h2 className="text-center py-2">Order Summary</h2>
-      <div className="card px-4 mx-auto my-4 w-50">
+    <div className="container py-5 bg-light">
+      <h2 className="text-center mb-4">Order Summary</h2>
+
+      <div className="card mx-auto w-75  rounded-3">
         <div className="card-body">
-          <p>PRICE DETIALS</p>
+          <div className="d-flex justify-content-between mb-3">
+            <p className="fw-bold">Price ({cartValue} item)</p>
+            <p className="fw-bold">&#8377; {totalCartPrice}</p>
+          </div>
+          <div className="d-flex justify-content-between mb-3">
+            <p>Delivery Charges</p>
+            <p>&#8377; 499</p>
+          </div>
           <hr />
-          <p>
-            Price ({cartValue} item)
-            <span className="float-end">&#8377; {totalCartPrice}</span>
-          </p>
-          <p>
-            Delivery Charges
-            <span className="float-end">&#8377; 499</span>
-          </p>
-          <hr />
-          <p>
-            <strong>
-              TOTAL AMOUNT
-              <span className="float-end">&#8377; {totalCartPrice + 499}</span>
-            </strong>
-          </p>
-          <hr />
+          <div className="d-flex justify-content-between mb-3">
+            <p className="fw-bold">TOTAL AMOUNT</p>
+            <p className="fw-bold">&#8377; {totalCartPrice + 499}</p>
+          </div>
         </div>
+      </div>
+
+      {showSuccessMessage && (
+        <div className="w-75 mx-auto">
+          <div
+            className="alert alert-success text-center py-3 my-4"
+            role="alert"
+          >
+            <h5 className="alert-heading">Order Placed Successfully!</h5>
+          </div>
+        </div>
+      )}
+
+      <div className="text-center mt-5">
+        <Link
+          to="/"
+          className="btn btn-primary btn-lg px-4 py-2 shadow-sm hover-shadow-lg"
+        >
+          Continue Shopping
+        </Link>
       </div>
     </div>
   );

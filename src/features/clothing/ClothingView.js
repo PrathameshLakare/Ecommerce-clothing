@@ -135,9 +135,10 @@ const ClothingView = ({ searchValue }) => {
 
   const clearFilters = (e) => {
     e.preventDefault();
-    dispatch(setSelectedCategories([]));
+    setSelectedCategories([]);
     setRating(1);
     dispatch(setSortByPrice("none"));
+    document.getElementById("filtersForm").reset();
   };
 
   const isChecked = (category) => selectedCategories?.includes(category);

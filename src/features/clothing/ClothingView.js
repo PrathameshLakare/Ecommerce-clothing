@@ -9,13 +9,13 @@ import {
   postWishlistData,
   deleteWishlistItem,
 } from "../wishllist/wishlistSlice";
-import { setSelectedCategories } from "../categories/categoriesSlice";
 
 const ClothingView = ({ searchValue }) => {
   const dispatch = useDispatch();
   const [rating, setRating] = useState(1);
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   const productCategory = useParams().category;
 
@@ -26,14 +26,13 @@ const ClothingView = ({ searchValue }) => {
 
     if (productCategory) {
       const updatedCategories = [...selectedCategories, productCategory];
-      dispatch(setSelectedCategories(updatedCategories));
+      setSelectedCategories(updatedCategories);
     }
   }, []);
 
   const { clothing, sortByPrice, status, error } = useSelector(
     (state) => state.clothing
   );
-  const { selectedCategories } = useSelector((state) => state.categories);
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
 
@@ -110,15 +109,11 @@ const ClothingView = ({ searchValue }) => {
   const handleSelectedCategory = (e) => {
     const { value, checked } = e.target;
     if (checked) {
-      dispatch(
-        setSelectedCategories([...selectedCategories, value.toLowerCase()])
-      );
+      setSelectedCategories([...selectedCategories, value.toLowerCase()]);
     } else {
-      dispatch(
-        setSelectedCategories(
-          selectedCategories.filter(
-            (category) => category !== value.toLowerCase()
-          )
+      setSelectedCategories(
+        selectedCategories.filter(
+          (category) => category !== value.toLowerCase()
         )
       );
     }

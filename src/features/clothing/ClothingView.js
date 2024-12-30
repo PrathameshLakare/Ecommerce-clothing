@@ -23,6 +23,11 @@ const ClothingView = ({ searchValue }) => {
     dispatch(fetchClothings());
     dispatch(fetchWishlistData());
     dispatch(fetchCartData());
+
+    if (productCategory) {
+      const updatedCategories = [...selectedCategories, productCategory];
+      dispatch(setSelectedCategories(updatedCategories));
+    }
   }, []);
 
   const { clothing, sortByPrice, status, error } = useSelector(
@@ -31,8 +36,6 @@ const ClothingView = ({ searchValue }) => {
   const { selectedCategories } = useSelector((state) => state.categories);
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
-
-  console.log(selectedCategories);
 
   const data = clothing.filter((item) =>
     item.productName.toLowerCase().includes(searchValue.toLowerCase())
@@ -94,30 +97,31 @@ const ClothingView = ({ searchValue }) => {
 
   const filteredData = data?.filter((product) => {
     const matchedCategories = product.productCategories.map((category) =>
-      selectedCategories.includes(category)
+      selectedCategories.includes(category.toLowerCase())
     );
     const matchesCategory =
       selectedCategories.length === 0 || matchedCategories.includes(true);
 
-    const matchesProductCategory =
-      !productCategory ||
-      product.productCategories
-        .map((category) => category.toLowerCase())
-        .includes(productCategory.toLowerCase());
-
     const matchedRating = product.productRating >= rating;
-    return matchesCategory && matchesProductCategory && matchedRating;
+
+    return matchesCategory && matchedRating;
   });
 
   const handleSelectedCategory = (e) => {
     const { value, checked } = e.target;
-    const currentCategories = selectedCategories;
-
-    const updatedCategories = checked
-      ? [...currentCategories, value]
-      : currentCategories.filter((category) => category !== value);
-
-    dispatch(setSelectedCategories(updatedCategories));
+    if (checked) {
+      dispatch(
+        setSelectedCategories([...selectedCategories, value.toLowerCase()])
+      );
+    } else {
+      dispatch(
+        setSelectedCategories(
+          selectedCategories.filter(
+            (category) => category !== value.toLowerCase()
+          )
+        )
+      );
+    }
   };
 
   const sortedProducts = filteredData?.sort((a, b) => {
@@ -136,11 +140,12 @@ const ClothingView = ({ searchValue }) => {
 
   const clearFilters = (e) => {
     e.preventDefault();
-    document.getElementById("filtersForm").reset();
     dispatch(setSelectedCategories([]));
     setRating(1);
     dispatch(setSortByPrice("none"));
   };
+
+  const isChecked = (category) => selectedCategories?.includes(category);
 
   return (
     <div>
@@ -171,8 +176,9 @@ const ClothingView = ({ searchValue }) => {
                   <label className="form-label">
                     <input
                       type={"checkbox"}
-                      onClick={(e) => handleSelectedCategory(e)}
+                      onChange={(e) => handleSelectedCategory(e)}
                       value="Clothing"
+                      checked={isChecked("clothing")}
                     />{" "}
                     All Clothing
                   </label>
@@ -180,8 +186,9 @@ const ClothingView = ({ searchValue }) => {
                   <label className="form-label">
                     <input
                       type={"checkbox"}
-                      onClick={(e) => handleSelectedCategory(e)}
+                      onChange={(e) => handleSelectedCategory(e)}
                       value="Men"
+                      checked={isChecked("men")}
                     />{" "}
                     Men Clothing
                   </label>
@@ -189,8 +196,9 @@ const ClothingView = ({ searchValue }) => {
                   <label className="form-label">
                     <input
                       type={"checkbox"}
-                      onClick={(e) => handleSelectedCategory(e)}
+                      onChange={(e) => handleSelectedCategory(e)}
                       value="Women"
+                      checked={isChecked("women")}
                     />{" "}
                     Women Clothing
                   </label>
@@ -198,8 +206,9 @@ const ClothingView = ({ searchValue }) => {
                   <label className="form-label">
                     <input
                       type={"checkbox"}
-                      onClick={(e) => handleSelectedCategory(e)}
+                      onChange={(e) => handleSelectedCategory(e)}
                       value="Kids"
+                      checked={isChecked("kids")}
                     />{" "}
                     Kids Clothing
                   </label>
@@ -334,6 +343,7 @@ const ClothingView = ({ searchValue }) => {
           </div>
         </div>
       </div>
+
       {showToast && (
         <div
           className="toast-container position-fixed bottom-0 end-0 p-3"

@@ -18,14 +18,14 @@ const CategoriesView = () => {
     <div className="container">
       {status === "loading" && <p className="text-center">Loading...</p>}
       {status === "error" && <p className="text-center">{error}</p>}
-      <div className="banner-container mb-4 shadow-sm">
+      <div className="banner-container mb-4 shadow-sm position-relative">
         <img
           src="https://images.pexels.com/photos/102129/pexels-photo-102129.jpeg?auto=compress&cs=tinysrgb&w=600"
           alt="Banner"
-          className="img-fluid w-100 object-fit-fill"
+          className="img-fluid w-100 object-fit-cover"
           style={{ maxHeight: "600px" }}
         />
-        <div className="position-absolute top-50 start-50 translate-middle text-white text-center">
+        <div className="position-absolute top-50 start-50 translate-middle text-white text-center w-100">
           <h1>Welcome to Our Store</h1>
           <p>Discover the best categories and products here!</p>
         </div>

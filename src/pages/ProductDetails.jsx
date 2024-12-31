@@ -21,7 +21,6 @@ const ProductDetails = () => {
   const { clothing, status } = useSelector((state) => {
     return state.clothing;
   });
-  console.log(status);
 
   useEffect(() => {
     dispatch(fetchClothings());

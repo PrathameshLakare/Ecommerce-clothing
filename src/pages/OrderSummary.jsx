@@ -1,26 +1,40 @@
-import { Link } from "react-router-dom";
-import { fetchCartData } from "../features/cart/cartSlice";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { fetchOrder } from "../features/order/orderSlice";
+import { clearCart } from "../features/cart/cartSlice";
 
 const OrderSummary = () => {
   const dispatch = useDispatch();
-  const { cart, cartValue } = useSelector((state) => state.cart);
+  const location = useLocation();
+  const { orderId } = location.state;
+  const { order, status, error } = useSelector((state) => state.order);
 
   const [showSuccessMessage, setShowSuccessMessage] = useState(true);
 
   useEffect(() => {
-    dispatch(fetchCartData());
+    dispatch(fetchOrder(orderId));
+    dispatch(clearCart());
     setTimeout(() => {
       setShowSuccessMessage(false);
     }, 5000);
   }, []);
 
-  const totalCartPrice = cart.reduce(
-    (acc, curr) =>
-      acc + parseInt(curr.productPrice) * parseInt(curr.productQuantity),
-    0
-  );
+  if (status === "loading") {
+    return (
+      <div>
+        <p className="text-center py-3">loading...</p>
+      </div>
+    );
+  }
+
+  if (status === "error") {
+    return (
+      <div>
+        <p className="text-center py-3">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container py-5 bg-light">
@@ -29,8 +43,8 @@ const OrderSummary = () => {
       <div className="card mx-auto w-75  rounded-3">
         <div className="card-body">
           <div className="d-flex justify-content-between mb-3">
-            <p className="fw-bold">Price ({cartValue} item)</p>
-            <p className="fw-bold">&#8377; {totalCartPrice}</p>
+            <p className="fw-bold">Price ({order?.products.length} item)</p>
+            <p className="fw-bold">&#8377; {order?.totalAmount}</p>
           </div>
           <div className="d-flex justify-content-between mb-3">
             <p>Delivery Charges</p>
@@ -39,7 +53,9 @@ const OrderSummary = () => {
           <hr />
           <div className="d-flex justify-content-between mb-3">
             <p className="fw-bold">TOTAL AMOUNT</p>
-            <p className="fw-bold">&#8377; {totalCartPrice + 499}</p>
+            <p className="fw-bold">
+              &#8377; {parseInt(order?.totalAmount || 0) + 499}
+            </p>
           </div>
         </div>
       </div>

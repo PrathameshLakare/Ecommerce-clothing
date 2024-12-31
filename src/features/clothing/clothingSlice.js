@@ -22,6 +22,9 @@ const clothingSlice = createSlice({
     setSortByPrice: (state, action) => {
       state.sortByPrice = action.payload;
     },
+    clearCart: (state) => {
+      state.clothing = [];
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchClothings.pending, (state) => {

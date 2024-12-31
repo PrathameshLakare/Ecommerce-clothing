@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteAddress, fetchAddress } from "./addressSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { placedOrder } from "../order/orderSlice";
 
 const AddressView = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [selectedAddress, setSelectedAddress] = useState("");
 
   const { address, status, error } = useSelector((state) => state.address);
@@ -12,6 +14,20 @@ const AddressView = () => {
   useEffect(() => {
     dispatch(fetchAddress());
   }, []);
+
+  const checkOutHandler = async () => {
+    if (selectedAddress) {
+      const result = await dispatch(
+        placedOrder({ shippingAddress: selectedAddress })
+      );
+
+      if (result.payload.order._id) {
+        navigate("/orderSummary", {
+          state: { orderId: result.payload.order._id },
+        });
+      }
+    }
+  };
 
   return (
     <div className="container py-3">
@@ -32,7 +48,7 @@ const AddressView = () => {
                   type="radio"
                   name="addressRadioBtn"
                   onChange={() => setSelectedAddress(add._id)}
-                  value={selectedAddress}
+                  value={add._id}
                   id={`address ${add._id}`}
                 />
 
@@ -68,7 +84,7 @@ const AddressView = () => {
         )}
       </ul>
       {selectedAddress && (
-        <Link className="btn btn-success my-3 me-3" to={"/orderSummary"}>
+        <Link className="btn btn-success my-3 me-3" onClick={checkOutHandler}>
           Checkout
         </Link>
       )}

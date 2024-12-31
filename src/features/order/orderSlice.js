@@ -6,7 +6,10 @@ const API_URL = process.env.REACT_APP_API_URL;
 export const placedOrder = createAsyncThunk(
   "order/placedOrder",
   async (shippingAddress) => {
-    const response = await axios.post(`${API_URL}/api/order`, shippingAddress);
+    const response = await axios.post(
+      `${API_URL}/api/order/placed`,
+      shippingAddress
+    );
     return response.data;
   }
 );

@@ -52,6 +52,10 @@ const cartSlice = createSlice({
     setTotalCartPrice: (state, action) => {
       state.totalCartPrice = action.payload;
     },
+    clearCart: (state, action) => {
+      state.cart = [];
+      state.cartValue = 0;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchCartData.pending, (state) => {
@@ -94,6 +98,6 @@ const cartSlice = createSlice({
   },
 });
 
-export const { setTotalCartPrice } = cartSlice.actions;
+export const { setTotalCartPrice, clearCart } = cartSlice.actions;
 
 export default cartSlice.reducer;

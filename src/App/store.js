@@ -4,6 +4,7 @@ import categoriesSlice from "../features/categories/categoriesSlice";
 import cartSlice from "../features/cart/cartSlice";
 import wishlistSlice from "../features/wishllist/wishlistSlice";
 import addressSlice from "../features/address/addressSlice";
+import orderSlice from "../features/order/orderSlice";
 
 export default configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export default configureStore({
     cart: cartSlice,
     wishlist: wishlistSlice,
     address: addressSlice,
+    order: orderSlice,
   },
 });

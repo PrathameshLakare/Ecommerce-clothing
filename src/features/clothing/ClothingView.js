@@ -285,7 +285,7 @@ const ClothingView = ({ searchValue }) => {
                               >
                                 <img
                                   src={product.productImg}
-                                  className="img-fluid object-fit-fit w-100 h-100 card-img"
+                                  className="img-fluid object-fit-cover w-100 h-100 card-img"
                                 />
                               </Link>
                             </div>

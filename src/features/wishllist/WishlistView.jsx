@@ -76,7 +76,7 @@ const WishlistView = () => {
       <div className="row">
         {status === "loading" && <p className="text-center">Loading...</p>}
         {status === "error" && <p className="text-center">{error}</p>}
-        {wishlist.length === 0 && (
+        {wishlist.length === 0 && status !== "loading" && (
           <p className="text-center">Your wishlist is empty.</p>
         )}
         {wishlist &&

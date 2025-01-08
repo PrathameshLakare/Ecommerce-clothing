@@ -105,7 +105,9 @@ const CartView = () => {
       <h2 className="text-center my-2">My Cart({cartValue})</h2>
       {status === "loading" && <p className="text-center">Loading...</p>}
       {status === "error" && <p className="text-center">{error}</p>}
-      {cart.length === 0 && <p className="text-center">Your cart is empty.</p>}
+      {cart.length === 0 && status !== "loading" && (
+        <p className="text-center">Your cart is empty.</p>
+      )}
       <div className="row">
         <div className="col-md-6">
           {cart.map((product) => (

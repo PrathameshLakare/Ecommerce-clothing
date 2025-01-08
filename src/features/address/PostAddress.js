@@ -30,7 +30,7 @@ const PostAddress = () => {
   }, [existingAddress]);
 
   const clickHandlerForAddress = (e) => {
-    e.preventDefault(); // Prevent the default form submission behavior
+    e.preventDefault();
     if (existingAddress) {
       dispatch(
         updateAddress({

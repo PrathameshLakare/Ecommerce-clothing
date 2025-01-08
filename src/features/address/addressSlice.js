@@ -69,6 +69,21 @@ const addressSlice = createSlice({
       state.error = action.error.message;
     });
 
+    builder.addCase(updateAddress.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(updateAddress.fulfilled, (state, action) => {
+      state.status = "success";
+      const updatedAddress = action.payload;
+      state.address = state.address.map((addr) =>
+        addr._id === updatedAddress._id ? updatedAddress : addr
+      );
+    });
+    builder.addCase(updateAddress.rejected, (state, action) => {
+      state.status = "error";
+      state.error = action.error.message;
+    });
+
     builder.addCase(deleteAddress.fulfilled, (state, action) => {
       const id = action.payload.address._id;
       state.address = state.address.filter((add) => add._id !== id);

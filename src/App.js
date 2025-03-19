@@ -25,6 +25,23 @@ export default function App() {
     dispatch(fetchWishlistData());
   }, []);
 
+  const debounce = (func, delay) => {
+    let timer;
+    return function (...args) {
+      let context = this;
+
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        func.apply(context, args);
+      }, delay);
+    };
+  };
+
+  const handleSearchValue = debounce(
+    (e) => setSearchValue(e.target.value),
+    300
+  );
+
   return (
     <Router>
       <nav className="navbar navbar-expand-lg">
@@ -56,7 +73,7 @@ export default function App() {
                   type="search"
                   placeholder="Search"
                   aria-label="Search"
-                  onChange={(e) => setSearchValue(e.target.value)}
+                  onChange={handleSearchValue}
                 />
               </form>
             </div>

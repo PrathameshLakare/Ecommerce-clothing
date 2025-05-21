@@ -4,14 +4,11 @@ import { createRoot } from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { Provider } from "react-redux";
-import store from "./App/store";
+import store from "./App/store.js";
 
-import App from "./App";
+import App from "./App.jsx";
 
-const rootElement = document.getElementById("root");
-const root = createRoot(rootElement);
-
-root.render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
       <App />

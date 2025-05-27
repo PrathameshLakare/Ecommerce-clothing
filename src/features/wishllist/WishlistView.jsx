@@ -1,146 +1,129 @@
-import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteCartItem, postCartData, fetchCartData } from "../cart/cartSlice";
 import {
   fetchWishlistData,
   deleteWishlistItem,
   postWishlistData,
 } from "./wishlistSlice";
+import { fetchCartData, deleteCartItem, postCartData } from "../cart/cartSlice";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const WishlistView = () => {
   const dispatch = useDispatch();
   const { wishlist, status, error } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
-  const [toastMessage, setToastMessage] = useState("");
-  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     dispatch(fetchCartData());
     dispatch(fetchWishlistData());
-  }, []);
+  }, [dispatch]);
 
-  const isInCart = (id) => cart.map((item) => item.productId).includes(id);
-  const isInWishlist = (id) =>
-    wishlist.map((item) => item.productId).includes(id);
-
-  const clickHandlerForCartBtn = (id) => {
-    if (isInCart(id)) {
+  const clickCart = (id) => {
+    const item = wishlist.find((p) => p.productId === id);
+    if (cart.map((i) => i.productId).includes(id)) {
       dispatch(deleteCartItem(id));
-      setToastMessage("Item removed from cart!");
-      setShowToast(true);
+      toast("Removed from cart", {
+        action: {
+          label: "Close",
+          onClick: () => console.log("Close"),
+        },
+      });
     } else {
-      const item = wishlist.find((product) => product.productId === id);
       if (item) {
-        const cartItem = {
-          productId: item.productId,
-          productName: item.productName,
-          productCategories: item.productCategories,
-          productImg: item.productImg,
-          productPrice: item.productPrice,
-          productRating: item.productRating,
-          productQuantity: 1,
-        };
-        dispatch(postCartData(cartItem));
-        setToastMessage("Item added to cart!");
-        setShowToast(true);
+        dispatch(postCartData({ ...item, productQuantity: 1 }));
+        toast("Added to cart", {
+          action: {
+            label: "Close",
+            onClick: () => console.log("Close"),
+          },
+        });
       }
     }
   };
 
-  const clickHandlerForWishlistBtn = (id) => {
-    if (isInWishlist(id)) {
+  const clickWish = (id) => {
+    if (wishlist.map((i) => i.productId).includes(id)) {
       dispatch(deleteWishlistItem(id));
-      setToastMessage("Item removed from wishlist!");
-      setShowToast(true);
+      toast("Removed from wishlist", {
+        action: {
+          label: "Close",
+          onClick: () => console.log("Close"),
+        },
+      });
     } else {
-      const item = cart.find((product) => product.productId === id);
-      if (item) {
-        const cartItem = {
-          productId: item.productId,
-          productName: item.productName,
-          productCategories: item.productCategories,
-          productImg: item.productImg,
-          productPrice: item.productPrice,
-          productRating: item.productRating,
-        };
-        dispatch(postWishlistData(cartItem));
-        setToastMessage("Item added to wishlist!");
-        setShowToast(true);
-      }
+      const item = cart.find((i) => i.productId === id);
+      if (item) dispatch(postWishlistData(item));
     }
   };
 
   return (
-    <div className="container">
-      <h1 className="text-center">My Wishlist</h1>
-      <div className="row">
-        {status === "loading" && <p className="text-center">Loading...</p>}
-        {status === "error" && <p className="text-center">{error}</p>}
-        {wishlist.length === 0 && status !== "loading" && (
-          <p className="text-center">Your wishlist is empty.</p>
-        )}
-        {wishlist &&
-          wishlist.map((product) => (
-            <div key={product._id} className="col-md-4">
-              <div className="card m-2">
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
+        My Wishlist
+      </h1>
+
+      {status === "loading" && (
+        <p className="text-center text-gray-500">Loading...</p>
+      )}
+      {status === "error" && (
+        <p className="text-center text-red-500">{error}</p>
+      )}
+      {!wishlist.length && status !== "loading" && (
+        <p className="text-center text-gray-600">Your wishlist is empty.</p>
+      )}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {wishlist.map((product) => (
+          <Card key={product.productId} className="group p-0">
+            <Link to={`/productListing/ProductDetails/${product.productId}`}>
+              <div className="relative overflow-hidden rounded-t-lg">
                 <img
                   src={product.productImg}
-                  alt={`${product.productName} Img`}
-                  className="img img-fluid w-100 rounded-top h-100"
+                  alt={product.productName}
+                  className="w-full aspect-[4/3] object-cover bg-gray-200 group-hover:opacity-75 transition"
                 />
-                <div className="card-body">
-                  <p className="fw-semibold">{product.productName}</p>
-                  <p>
-                    <strong>Price: &#8377;{product.productPrice}</strong>
-                  </p>
-                  <button
-                    className="btn btn-primary w-100 my-2"
-                    onClick={() => clickHandlerForCartBtn(product.productId)}
-                  >
-                    {cart
-                      .map((item) => item.productId)
-                      .includes(product.productId)
-                      ? "Remove from cart"
-                      : "Add to Cart"}
-                  </button>
-                  <button
-                    onClick={() =>
-                      clickHandlerForWishlistBtn(product.productId)
-                    }
-                    className="btn btn-secondary w-100 my-2"
-                  >
-                    {isInWishlist(product.productId)
-                      ? "Remove from wishlist"
-                      : "Save to Wishlist"}
-                  </button>
-                </div>
+                <span className="absolute top-2 left-2 bg-gray-800 text-white text-xs font-semibold px-2 py-1 rounded">
+                  {product.productRating} ★
+                </span>
               </div>
-            </div>
-          ))}
+            </Link>
+
+            <CardContent className="p-4">
+              <Link to={`/productListing/ProductDetails/${product.productId}`}>
+                <h3 className="text-md font-medium text-gray-800 truncate">
+                  {product.productName}
+                </h3>
+              </Link>
+              <p className="mt-2 text-lg font-semibold text-gray-900">
+                ₹{product.productPrice}
+              </p>
+              <div className="mt-4 space-y-2">
+                <Button
+                  className="w-full"
+                  variant="default"
+                  onClick={() => clickCart(product.productId)}
+                >
+                  {cart.map((i) => i.productId).includes(product.productId)
+                    ? "Remove"
+                    : "Add to Cart"}
+                </Button>
+                <Button
+                  className="w-full"
+                  variant="outline"
+                  onClick={() => clickWish(product.productId)}
+                >
+                  {wishlist.map((i) => i.productId).includes(product.productId)
+                    ? "Remove"
+                    : "Save to Wishlist"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
-      {showToast && (
-        <div
-          className="toast-container position-fixed bottom-0 end-0 p-3"
-          style={{ zIndex: 5 }}
-        >
-          <div
-            className="toast show text-bg-primary text-white"
-            role="alert"
-            aria-live="assertive"
-            aria-atomic="true"
-          >
-            <div className="toast-body fs-6">
-              {toastMessage}
-              <button
-                type="button"
-                className="btn-close float-end btn-close-white"
-                onClick={() => setShowToast(false)}
-                aria-label="Close"
-              ></button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

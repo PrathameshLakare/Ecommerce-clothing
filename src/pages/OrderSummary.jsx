@@ -1,8 +1,9 @@
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { fetchOrder } from "../features/order/orderSlice";
 import { clearCart } from "../features/cart/cartSlice";
+import { Button } from "@/components/ui/button";
 
 const OrderSummary = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const OrderSummary = () => {
   if (status === "loading") {
     return (
       <div>
-        <p className="text-center py-3">loading...</p>
+        <p className="text-center py-3 text-muted text-lg">Loading...</p>
       </div>
     );
   }
@@ -31,52 +32,46 @@ const OrderSummary = () => {
   if (status === "error") {
     return (
       <div>
-        <p className="text-center py-3">{error}</p>
+        <p className="text-center py-3 text-red-500 text-lg">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="container py-5 bg-light">
-      <h2 className="text-center mb-4">Order Summary</h2>
+    <div className="max-w-3xl mx-auto px-4 py-10">
+      <h2 className="text-center text-2xl font-semibold mb-6">Order Summary</h2>
 
-      <div className="card mx-auto w-75  rounded-3">
-        <div className="card-body">
-          <div className="d-flex justify-content-between mb-3">
-            <p className="fw-bold">Price ({order?.products.length} item)</p>
-            <p className="fw-bold">&#8377; {order?.totalAmount}</p>
-          </div>
-          <div className="d-flex justify-content-between mb-3">
-            <p>Delivery Charges</p>
-            <p>&#8377; 499</p>
-          </div>
-          <hr />
-          <div className="d-flex justify-content-between mb-3">
-            <p className="fw-bold">TOTAL AMOUNT</p>
-            <p className="fw-bold">
-              &#8377; {parseInt(order?.totalAmount || 0) + 499}
-            </p>
-          </div>
+      <div className="bg-white shadow-xl rounded-2xl p-6 border border-gray-100">
+        <div className="flex justify-between mb-4 text-base">
+          <p className="font-medium">Price ({order?.products.length} item)</p>
+          <p className="font-medium">&#8377; {order?.totalAmount}</p>
+        </div>
+        <div className="flex justify-between mb-4 text-sm text-muted-foreground">
+          <p>Delivery Charges</p>
+          <p>&#8377; 499</p>
+        </div>
+        <hr className="my-4" />
+        <div className="flex justify-between text-lg font-semibold">
+          <p>Total Amount</p>
+          <p>&#8377; {parseInt(order?.totalAmount || 0) + 499}</p>
         </div>
       </div>
 
       {showSuccessMessage && (
-        <div className="w-75 mx-auto">
-          <div
-            className="alert alert-success text-center py-3 my-4"
-            role="alert"
-          >
-            <h5 className="alert-heading">Order Placed Successfully!</h5>
+        <div className="mt-6">
+          <div className="rounded-xl border border-green-300 bg-green-100 p-4 text-center">
+            <h5 className="text-green-700 font-medium">
+              Order Placed Successfully!
+            </h5>
           </div>
         </div>
       )}
 
-      <div className="text-center mt-5">
-        <Link
-          to="/"
-          className="btn btn-primary btn-lg px-4 py-2 shadow-sm hover-shadow-lg"
-        >
-          Continue Shopping
+      <div className="text-center mt-8">
+        <Link to="/">
+          <Button className="text-base px-6 py-2 rounded-xl shadow-md">
+            Continue Shopping
+          </Button>
         </Link>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const placedOrder = createAsyncThunk(
   "order/placedOrder",
@@ -31,7 +31,7 @@ const orderSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(placedOrder.pending, (state, action) => {
+    builder.addCase(placedOrder.pending, (state) => {
       state.status = "loading";
     }),
       builder.addCase(placedOrder.fulfilled, (state, action) => {
@@ -42,7 +42,7 @@ const orderSlice = createSlice({
       state.status = "error";
       state.error = action.error.message;
     });
-    builder.addCase(fetchOrder.pending, (state, action) => {
+    builder.addCase(fetchOrder.pending, (state) => {
       state.status = "loading";
     }),
       builder.addCase(fetchOrder.fulfilled, (state, action) => {

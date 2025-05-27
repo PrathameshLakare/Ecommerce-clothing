@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchClothings } from "../features/clothing/clothingSlice";
@@ -12,172 +12,165 @@ import {
   fetchWishlistData,
   deleteWishlistItem,
 } from "../features/wishllist/wishlistSlice";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const ProductDetails = () => {
   const dispatch = useDispatch();
-  const productId = useParams().productId;
-  const [toastMessage, setToastMessage] = useState("");
-  const [showToast, setShowToast] = useState(false);
-  const { clothing, status } = useSelector((state) => {
-    return state.clothing;
-  });
+  const { productId } = useParams();
+
+  const { clothing, status } = useSelector((state) => state.clothing);
+  const { wishlist } = useSelector((state) => state.wishlist);
+  const { cart } = useSelector((state) => state.cart);
 
   useEffect(() => {
     dispatch(fetchClothings());
     dispatch(fetchCartData());
     dispatch(fetchWishlistData());
+  }, [dispatch]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, []);
 
-  const { wishlist } = useSelector((state) => state.wishlist);
-  const { cart } = useSelector((state) => state.cart);
-
-  const product = clothing?.find((product) => product._id === productId);
+  const product = clothing?.find((p) => p._id === productId);
 
   const clickHandlerForCart = (id) => {
-    const isInCart = cart.map((item) => item.productId).includes(id);
-
-    if (isInCart) {
+    const inCart = cart.some((item) => item.productId === id);
+    if (inCart) {
       dispatch(deleteCartItem(id));
-      setToastMessage("Item removed from cart!");
-      setShowToast(true);
+      toast("Item removed from cart!", {
+        action: {
+          label: "Close",
+          onClick: () => console.log("Close"),
+        },
+      });
     } else {
-      const item = clothing.find((product) => product._id === id);
-
+      const item = clothing.find((p) => p._id === id);
       if (item) {
-        const cartItem = {
-          productId: item._id,
-          productName: item.productName,
-          productCategories: item.productCategories,
-          productImg: item.productImg,
-          productPrice: item.productPrice,
-          productRating: item.productRating,
-          productQuantity: 1,
-        };
+        dispatch(
+          postCartData({
+            productId: item._id,
+            productName: item.productName,
+            productCategories: item.productCategories,
+            productImg: item.productImg,
+            productPrice: item.productPrice,
+            productRating: item.productRating,
+            productQuantity: 1,
+          })
+        );
 
-        dispatch(postCartData(cartItem));
-        setToastMessage("Item added to cart!");
-        setShowToast(true);
+        toast("Item added to cart!", {
+          action: {
+            label: "Close",
+            onClick: () => console.log("Close"),
+          },
+        });
       }
     }
   };
 
   const clickHandlerForWishlist = (id) => {
-    const isInWishlist = wishlist.map((item) => item.productId).includes(id);
-
-    if (isInWishlist) {
+    const inWishlist = wishlist.some((item) => item.productId === id);
+    if (inWishlist) {
       dispatch(deleteWishlistItem(id));
-      setToastMessage("Item removed from wishlist!");
-      setShowToast(true);
-    } else {
-      const item = clothing.find((product) => product._id === id);
 
+      toast("Item removed from wishlist!", {
+        action: {
+          label: "Close",
+          onClick: () => console.log("Close"),
+        },
+      });
+    } else {
+      const item = clothing.find((p) => p._id === id);
       if (item) {
-        const wishlistItem = {
-          productId: item._id,
-          productName: item.productName,
-          productCategories: item.productCategories,
-          productImg: item.productImg,
-          productPrice: item.productPrice,
-          productRating: item.productRating,
-        };
-        dispatch(postWishlistData(wishlistItem));
-        setToastMessage("Item added to wishlist!");
-        setShowToast(true);
+        dispatch(
+          postWishlistData({
+            productId: item._id,
+            productName: item.productName,
+            productCategories: item.productCategories,
+            productImg: item.productImg,
+            productPrice: item.productPrice,
+            productRating: item.productRating,
+          })
+        );
+        toast("Item added to wishlist!", {
+          action: {
+            label: "Close",
+            onClick: () => console.log("Close"),
+          },
+        });
       }
     }
   };
 
   return (
-    <div>
-      {status === "loading" && <p className="text-center">Loading...</p>}
-      <div
-        className="container d-flex align-items-center justify-content-center"
-        style={{ minHeight: "700px" }}
-      >
-        {product && (
-          <div className="d-flex justify-content-center p-3">
-            <div className="card rounded vh-50 m-4">
-              <div className="row justify-content-center">
-                <div className="col-md-6">
-                  <img
-                    src={product.productImg}
-                    className="img-fluid w-100 h-100 object-fit-fill rounded-start"
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <div className="card-body mx-3">
-                    <h3 className="fw-semibold mt-2 mb-4">
-                      {product.productName}
-                    </h3>
-
-                    <p className="my-2">
-                      <strong>Price: &#8377;{product.productPrice}</strong>
-                    </p>
-
-                    <p className="my-2">
-                      <strong>Rating: {product.productRating}</strong>
-                    </p>
-
-                    <p className="my-2">
-                      <strong>Categories: </strong>
-                      {product.productCategories.join(", ")}
-                    </p>
-
-                    <p className="my-2">
-                      <strong>Details: </strong>
-                      {product.productDetails}
-                    </p>
-
-                    <button
-                      onClick={() => clickHandlerForCart(product._id)}
-                      className="btn btn-primary w-100 my-2 "
-                    >
-                      {cart.map((item) => item.productId).includes(product._id)
-                        ? "Remove from cart"
-                        : "Add to cart"}
-                    </button>
-                    <button
-                      onClick={() => clickHandlerForWishlist(product._id)}
-                      className="btn btn-secondary w-100 my-2"
-                    >
-                      {wishlist
-                        .map((item) => item.productId)
-                        .includes(product._id)
-                        ? "Remove from wishlist"
-                        : "Save to Wishlist"}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {showToast && (
-        <div
-          className="toast-container position-fixed bottom-0 end-0 p-3"
-          style={{ zIndex: 5 }}
-        >
-          <div
-            className="toast show text-bg-primary text-white"
-            role="alert"
-            aria-live="assertive"
-            aria-atomic="true"
-          >
-            <div className="toast-body fs-6">
-              {toastMessage}
-              <button
-                type="button"
-                className="btn-close float-end btn-close-white"
-                onClick={() => setShowToast(false)}
-                aria-label="Close"
-              ></button>
-            </div>
-          </div>
-        </div>
+    <div className="max-w-5xl md:my-15 mx-auto px-4 py-6">
+      {status === "loading" && (
+        <p className="text-center text-gray-500">Loading...</p>
       )}
+
+      {product && (
+        <Card className="flex flex-col md:flex-row overflow-hidden">
+          <div className="w-full md:w-1/2 h-64 md:h-auto p-3">
+            <img
+              src={product.productImg}
+              alt={product.productName}
+              className="w-full h-full object-cover rounded"
+            />
+          </div>
+
+          <CardContent className="flex-1 p-6 flex flex-col">
+            <CardHeader>
+              <CardTitle className="text-2xl font-semibold mb-2">
+                {product.productName}
+              </CardTitle>
+            </CardHeader>
+
+            <div className="space-y-2 text-gray-700 flex-1">
+              <p>
+                <strong>Price:</strong> ₹{product.productPrice}
+              </p>
+              <p>
+                <strong>Rating:</strong> {product.productRating} ★
+              </p>
+              <p>
+                <strong>Categories:</strong>{" "}
+                {product.productCategories.join(", ")}
+              </p>
+              <p>
+                <strong>Details:</strong> {product.productDetails}
+              </p>
+            </div>
+
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <Button
+                variant="default"
+                onClick={() => clickHandlerForCart(product._id)}
+              >
+                {cart.some((i) => i.productId === product._id)
+                  ? "Remove from cart"
+                  : "Add to cart"}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => clickHandlerForWishlist(product._id)}
+              >
+                {wishlist.some((i) => i.productId === product._id)
+                  ? "Remove from wishlist"
+                  : "Save to Wishlist"}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="mt-6 text-center">
+        <Link to="/productListing/clothing">
+          <Button variant="outline">Back to Products</Button>
+        </Link>
+      </div>
     </div>
   );
 };

@@ -1,11 +1,10 @@
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchCategories } from "./categoriesSlice";
 import { useEffect } from "react";
 
 const CategoriesView = () => {
   const dispatch = useDispatch();
-
   const { categories, status, error } = useSelector(
     (state) => state.categories
   );
@@ -15,46 +14,66 @@ const CategoriesView = () => {
   }, [dispatch]);
 
   return (
-    <div className="container">
-      {status === "loading" && <p className="text-center">Loading...</p>}
-      {status === "error" && <p className="text-center">{error}</p>}
-      <div className="banner-container mb-4 shadow-sm position-relative">
+    <div className="">
+      {/* Banner Section */}
+      <div className="relative w-full max-h-[600px] overflow-hidden mb-12 shadow-lg">
         <img
           src="https://images.pexels.com/photos/102129/pexels-photo-102129.jpeg?auto=compress&cs=tinysrgb&w=600"
           alt="Banner"
-          className="img-fluid w-100 object-fit-cover"
-          style={{ maxHeight: "600px" }}
+          className="w-full h-[600px] object-cover"
         />
-        <div className="position-absolute top-50 start-50 translate-middle text-white text-center w-100">
-          <h1>Welcome to Our Store</h1>
-          <p>Discover the best categories and products here!</p>
+        <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white text-center px-4">
+          <h1 className="text-4xl sm:text-5xl font-bold">
+            Welcome to Our Store
+          </h1>
+          <p className="mt-3 text-lg sm:text-xl">
+            Discover the best categories and products here!
+          </p>
         </div>
       </div>
 
-      <div className="container py-4">
-        <h2 className="text-center mb-4">Shop by Category</h2>
+      {/* Categories Section */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+        {status === "loading" && <p className="text-center">Loading...</p>}
+        {status === "error" && (
+          <p className="text-center text-red-500">{error}</p>
+        )}
 
-        <div className="row g-4">
-          {categories?.map((category) => (
-            <div key={category._id} className="col-sm-6 col-md-4 col-lg-3">
-              <Link
-                to={`/productListing/${category.categoryName.toLowerCase()}`}
-                className="text-decoration-none"
-              >
-                <div className="card text-center">
-                  <img
-                    src={category.categoryImg}
-                    className="card-img-top img-fluid"
-                    alt={category.categoryName}
-                  />
-                  <div className="card-body">
-                    <h5 className="card-title">{category.categoryName}</h5>
-                  </div>
+        {status !== "loading" && status !== "error" && (
+          <div className="bg-gray-100 rounded-lg">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <div className="mx-auto max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-16">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Collections
+                </h2>
+
+                <div className="mt-6 grid gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {categories?.map((category) => (
+                    <Link
+                      key={category._id}
+                      to={`/productListing/${category.categoryName.toLowerCase()}`}
+                      className="group relative"
+                    >
+                      <div className="w-full overflow-hidden rounded-lg bg-white">
+                        <img
+                          src={category.categoryImg}
+                          alt={category.categoryName}
+                          className="w-full h-64 object-cover transition duration-300 ease-in-out group-hover:brightness-75"
+                        />
+                      </div>
+                      <h3 className="mt-6 text-sm text-gray-500">
+                        {category.categoryName}
+                      </h3>
+                      <p className="text-base font-semibold text-gray-900">
+                        Explore the collection
+                      </p>
+                    </Link>
+                  ))}
                 </div>
-              </Link>
+              </div>
             </div>
-          ))}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

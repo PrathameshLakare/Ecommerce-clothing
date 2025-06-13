@@ -11,14 +11,15 @@ import {
   postWishlistData,
 } from "../wishllist/wishlistSlice";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const CartView = () => {
   const dispatch = useDispatch();
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart, cartValue, status, error } = useSelector((state) => state.cart);
-  const [toastMessage, setToastMessage] = useState("");
-  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     dispatch(fetchCartData());
@@ -32,8 +33,12 @@ const CartView = () => {
   const clickHandlerForCartBtn = (id) => {
     if (isInCart(id)) {
       dispatch(deleteCartItem(id));
-      setToastMessage("Item removed from cart!");
-      setShowToast(true);
+      toast("Item removed from cart!", {
+        action: {
+          label: "Close",
+          onClick: () => console.log("Close"),
+        },
+      });
     } else {
       const item = wishlist.find((product) => product.productId === id);
       if (item) {
@@ -47,8 +52,12 @@ const CartView = () => {
           productQuantity: 1,
         };
         dispatch(postCartData(cartItem));
-        setToastMessage("Item added to cart!");
-        setShowToast(true);
+        toast("Item added to cart!", {
+          action: {
+            label: "Close",
+            onClick: () => console.log("Close"),
+          },
+        });
       }
     }
   };
@@ -56,8 +65,12 @@ const CartView = () => {
   const clickHandlerForWishlistBtn = (id) => {
     if (isInWishlist(id)) {
       dispatch(deleteWishlistItem(id));
-      setToastMessage("Item removed from wishlist!");
-      setShowToast(true);
+      toast("Item removed from wishlist!", {
+        action: {
+          label: "Close",
+          onClick: () => console.log("Close"),
+        },
+      });
     } else {
       const item = cart.find((product) => product.productId === id);
       if (item) {
@@ -70,8 +83,12 @@ const CartView = () => {
           productRating: item.productRating,
         };
         dispatch(postWishlistData(cartItem));
-        setToastMessage("Item added to wishlist!");
-        setShowToast(true);
+        toast("Item added to wishlist!", {
+          action: {
+            label: "Close",
+            onClick: () => console.log("Close"),
+          },
+        });
       }
     }
   };
@@ -101,136 +118,116 @@ const CartView = () => {
   const deliveryCharges = 499;
 
   return (
-    <div className="container py-3 bg-body-tertiary">
-      <h2 className="text-center my-2">My Cart({cartValue})</h2>
+    <div className="max-w-7xl mx-auto py-6 px-4">
+      <h2 className="text-3xl font-bold text-center mb-6">
+        My Cart ({cartValue})
+      </h2>
+
       {status === "loading" && <p className="text-center">Loading...</p>}
-      {status === "error" && <p className="text-center">{error}</p>}
+      {status === "error" && (
+        <p className="text-center text-red-500">{error}</p>
+      )}
       {cart.length === 0 && status !== "loading" && (
         <p className="text-center">Your cart is empty.</p>
       )}
-      <div className="row">
-        <div className="col-md-6">
-          {cart.map((product) => (
-            <div key={product._id} className="card m-3">
-              <div className="row">
-                <div className="col-5">
-                  <img
-                    src={product.productImg}
-                    alt={`${product.productName} Img`}
-                    className="img img-fluid w-100 rounded-start h-100"
-                  />
-                </div>
-                <div className="col-7">
-                  <div className="p-2">
-                    <p className="fs-3 fw-semibold">{product.productName}</p>
-                    <p>
-                      <strong>Price: &#8377;{product.productPrice}</strong>
-                    </p>
-                    <div className="row">
-                      <div className="col-lg-4 mt-1">Quantity:</div>
-                      <div className="col-lg-8 mt-1">
-                        <button
-                          className="btn btn-outline-dark rounded-circle m-1 btn-sm text-center"
-                          onClick={() =>
-                            clickHandlerForDecreasingQuantity(product.productId)
-                          }
-                        >
-                          -
-                        </button>
-                        <span className="py-1 px-3 rounded w-25 h-100 text-bg-light border border-dark">
-                          {product.productQuantity}
-                        </span>
-                        <button
-                          className="btn btn-outline-dark rounded-circle m-1 btn-sm text-center"
-                          onClick={() =>
-                            clickHandlerForIncreasingQuantity(product.productId)
-                          }
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
 
+      <div className="grid md:grid-cols-2 gap-6">
+        <div>
+          {cart.map((product) => (
+            <Card key={product._id} className="mb-4">
+              <CardContent className="p-4 flex flex-col md:flex-row gap-4">
+                <img
+                  src={product.productImg}
+                  alt={product.productName}
+                  className="w-full h-40 md:w-40 md:h-40 object-cover rounded"
+                />
+                <div className="flex-1 flex flex-col">
+                  <CardTitle className="text-xl mb-2">
+                    {product.productName}
+                  </CardTitle>
+                  <p className="text-gray-700 font-medium mb-2">
+                    Price: ₹{product.productPrice}
+                  </p>
+                  <div className="flex items-center mb-4">
+                    <span className="mr-2">Quantity:</span>
                     <button
-                      onClick={() => clickHandlerForCartBtn(product.productId)}
-                      className="btn btn-primary w-100 my-2"
+                      onClick={() =>
+                        clickHandlerForDecreasingQuantity(product.productId)
+                      }
+                      className="px-2 py-1 border rounded-full"
                     >
-                      {isInCart(product.productId)
-                        ? "Remove from cart"
-                        : "Add to cart"}
+                      -
                     </button>
+                    <span className="mx-3">{product.productQuantity}</span>
                     <button
+                      onClick={() =>
+                        clickHandlerForIncreasingQuantity(product.productId)
+                      }
+                      className="px-2 py-1 border rounded-full"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  {/* Buttons container */}
+                  <div className="flex flex-col md:flex-col gap-3 mt-auto">
+                    <Button
+                      className="w-full py-2"
+                      variant="default"
+                      onClick={() => clickHandlerForCartBtn(product.productId)}
+                    >
+                      {cart.map((i) => i.productId).includes(product.productId)
+                        ? "Remove"
+                        : "Add to Cart"}
+                    </Button>
+                    <Button
+                      className="w-full py-2"
+                      variant="outline"
                       onClick={() =>
                         clickHandlerForWishlistBtn(product.productId)
                       }
-                      className="btn btn-secondary w-100 my-2"
                     >
-                      {isInWishlist(product.productId)
-                        ? "Remove from wishlist"
+                      {wishlist
+                        .map((i) => i.productId)
+                        .includes(product.productId)
+                        ? "Remove"
                         : "Save to Wishlist"}
-                    </button>
+                    </Button>
                   </div>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
-        <div className="col-md-6">
-          <div className="sticky-md-top p-3">
-            <div className="card px-4">
-              <div className="card-body">
-                <p>PRICE DETAILS</p>
-                <hr />
-                <p>
-                  Price ({cartValue} items)
-                  <span className="float-end">&#8377; {totalCartPrice}</span>
-                </p>
-                <p>
-                  Delivery Charges
-                  <span className="float-end">&#8377; {deliveryCharges}</span>
-                </p>
-                <hr />
-                <p>
-                  <strong>
-                    TOTAL AMOUNT
-                    <span className="float-end">
-                      &#8377; {totalCartPrice + deliveryCharges}
-                    </span>
-                  </strong>
-                </p>
-                <hr />
-                <Link to="/address" className="btn btn-primary w-100">
-                  PLACE ORDER
-                </Link>
+
+        <div>
+          <Card className="sticky top-6">
+            <CardHeader>
+              <CardTitle className="text-lg">PRICE DETAILS</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <div className="flex justify-between">
+                <span>Price ({cartValue} items)</span>
+                <span>₹ {totalCartPrice}</span>
               </div>
-            </div>
-          </div>
+              <div className="flex justify-between">
+                <span>Delivery Charges</span>
+                <span>₹ {deliveryCharges}</span>
+              </div>
+              <div className="border-t pt-2 flex justify-between font-bold">
+                <span>Total Amount</span>
+                <span>₹ {totalCartPrice + deliveryCharges}</span>
+              </div>
+              <Link
+                to="/address"
+                className="block mt-4 w-full text-center bg-green-600 text-white py-2 rounded hover:bg-green-700"
+              >
+                PLACE ORDER
+              </Link>
+            </CardContent>
+          </Card>
         </div>
       </div>
-
-      {showToast && (
-        <div
-          className="toast-container position-fixed bottom-0 end-0 p-3"
-          style={{ zIndex: 5 }}
-        >
-          <div
-            className="toast show text-bg-primary text-white"
-            role="alert"
-            aria-live="assertive"
-            aria-atomic="true"
-          >
-            <div className="toast-body fs-6">
-              {toastMessage}
-              <button
-                type="button"
-                className="btn-close float-end btn-close-white"
-                onClick={() => setShowToast(false)}
-                aria-label="Close"
-              ></button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

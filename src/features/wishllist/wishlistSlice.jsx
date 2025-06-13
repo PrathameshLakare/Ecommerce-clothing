@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const fetchWishlistData = createAsyncThunk(
   "wishlist/fetchWishlist",
@@ -25,7 +25,7 @@ export const deleteWishlistItem = createAsyncThunk(
   "wishlist/deleteWishlist",
   async (id) => {
     const response = await axios.delete(`${API_URL}/api/wishlist/${id}`);
-    return id;
+    return response.data;
   }
 );
 
@@ -62,8 +62,10 @@ const wishlistSlice = createSlice({
     });
     builder.addCase(deleteWishlistItem.fulfilled, (state, action) => {
       state.wishlist = state.wishlist.filter(
-        (item) => item.productId !== action.payload
+        (item) => item.productId !== action.payload.product.productId
       );
+      console.log(action.payload.product._id);
+      console.log(state.wishlist);
       state.wishlistValue = state.wishlist.length;
     });
   },

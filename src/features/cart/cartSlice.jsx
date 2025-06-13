@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const fetchCartData = createAsyncThunk(
   "cart/fetchCartItems",
@@ -52,7 +52,7 @@ const cartSlice = createSlice({
     setTotalCartPrice: (state, action) => {
       state.totalCartPrice = action.payload;
     },
-    clearCart: (state, action) => {
+    clearCart: (state) => {
       state.cart = [];
       state.cartValue = 0;
     },

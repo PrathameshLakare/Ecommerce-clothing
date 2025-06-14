@@ -13,12 +13,20 @@ different categories. Features include a shopping cart, wishlist, and filters su
 
 ## Quick Start
 
+### 🚀 Running the Server
+
 ```
 git clone https://github.com/PrathameshLakare/Ecommerce-clothing.git
 cd Ecommerce-clothing # Only if there is a project folder created by Git
 npm install
 npm run dev
 ```
+
+### 🔑 Environment Variables
+
+Create a `.env` file in the root and add:
+
+REACT_APP_API_URL=you-backend-url-here
 
 ## Technologies
 
